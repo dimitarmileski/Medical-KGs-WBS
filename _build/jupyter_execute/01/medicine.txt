@@ -1,0 +1,646 @@
+# **Medical text knowledge graph**
+# Dimitar Mileski
+
+## Exploring RDF with Python methods
+
+As a first example, we'll see how Python's built-in methods can be used to get and manipulate RDF. More specifically, we'll read RDF in the JSON-LD format, meaning we can use standard JSON manipulation to work with RDF data.
+
+First, we need to install *matplotlib*, and do some housekeeping to prepare the necessary libraries. We then import *pyplot* and *Basemap*, for generating a geographical map.
+
+!pip install matplotlib
+
+!apt-get install libgeos-3.5.0
+!apt-get install libgeos-dev
+!pip install https://github.com/matplotlib/basemap/archive/master.zip
+
+!pip install pyproj==1.9.6
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
+
+We'll use these modules, used for HTTP requests and pretty printing, 
+respectively.
+
+import requests, pprint
+
+Set the parameters.
+
+url = "http://dbpedia.org/resource/Skopje"
+headers = {'Accept': 'application/ld+json'}
+
+Send an HTTP request to DBpedia and get the graph for *Medicine* in JSON-LD. Here, the content negotiation is explicit, by using the 'Accept' header.
+
+r = requests.get(url, headers=headers)
+result = r.json()
+
+The 'result' variable is a dictionary with one key-value pair, where the key is '@graph'. The value is then a list of size 1, so we need to select its content using index '0'. The 'attributes' variable then represents a dictionary, with 216 key-value pairs in this example.
+
+attributes = result.get('@graph')[0]
+
+We can print out the content of the 'attributes' dictionary.
+
+pprint.pprint(attributes)
+
+We can select specific properties for the resource 'Medicine', based on the RDF predicates used in the RDF graph.
+
+geo = "http://www.w3.org/2003/01/geo/wgs84_pos#"
+lat = attributes.get(geo + 'lat')
+lon = attributes.get(geo + 'long')
+
+print(lat)
+
+Some attributes can be harder to parse, because they are not simple values.
+
+name = attributes['http://xmlns.com/foaf/0.1/name'][0]['@value']
+
+print('City:', name)
+print('Latitude:', lat)
+print('Longitude:', lon)
+
+Here, we create the figure and the map. Then, we add Skopje's location on top of the map.
+
+fig = plt.figure(figsize=(8, 8))
+m = Basemap(projection='lcc', resolution=None,
+            width=8E6, height=8E6, 
+            lat_0=lat, lon_0=lon,)
+m.etopo(scale=0.5, alpha=0.5)
+
+# Now we map the (lon, lat) of Skopje to (x, y), and add them on the map.
+x, y = m(lon, lat)
+plt.plot(x, y, 'ok', markersize=5)
+plt.text(x, y, ' Skopje', fontsize=12);
+
+## Manipulating RDF with RDFLib
+
+Next, we'll see how we can use *RDFLib* for manipulating RDF. *RDFLib* is to Python what *Apache Jena* is to Java.
+
+We'll use the *RDFLib* module to manipulate RDF.
+
+!pip install rdflib
+
+from rdflib import Graph, URIRef, Literal
+from rdflib.namespace import RDFS, FOAF
+
+pip install plotly-express
+
+Set the parameters.
+
+url = "http://dbpedia.org/resource/Medicine"
+
+We create a new Graph. Then we load the content represented by the 'url' variable. With this, the 'parse()' method issues a HTTP GET request, and gets the RDF data for the resource. This is possible due to an implicit content negotiation, which the method itself implements and uses.
+
+g = Graph()
+g.parse(url)
+
+We create two new entities: one for Skopje, and another for FINKI. We create a new predicate, depicting a 'dbo:location' relation. We also create a literal: the full title of FINKI.
+
+skopje = URIRef(url)
+finki = URIRef("http://finki.ukim.mk/")
+location = URIRef("http://dbpedia.org/ontology/location")
+name = Literal("Faculty of Computer Science and Engineering, Skopje")
+
+Check the number of triples in the Graph.
+
+print("Initial length:", len(g))
+
+Then, we create two new RDF statements (RDF triples). The first one denotes Skopje as a location of FINKI, and the second one provides the name of the FINKI entity.
+
+g.add( (finki, location, skopje) )
+g.add( (finki, RDFS.label, name) )
+
+Check the number of triples in the Graph, after the new RDF triples.
+
+print("New length:", len(g))
+
+Print the entire Graph using Turtle syntax.
+
+print(g.serialize(format='turtle'))
+
+Traverse all RDF triples with the '?s rdfs:label ?o' triple pattern.
+
+for s,p,o in g.triples((None, RDFS.label, None)):
+    print(s,p,o)
+
+Select all ?p predicates, using the '?s ?p ?o' triple pattern.
+
+predicates = g.predicates(subject=None, object=None)
+for predicate in predicates:
+    print(predicate)
+
+Access a specific value from the graph, specifying the subject and the predicate.
+
+medicine = URIRef("https://dbpedia.org/resource/Medicine")
+name = g.value(subject=medicine, predicate=RDFS.label)
+print("Medicine :", name)
+
+Access a set of values (objects) from the graph, specifying the subject and the predicate.
+
+names = g.objects(subject=skopje, predicate=FOAF.name)
+print ("All name variants of Skopje:")
+for name in names:
+    print("\t", name)
+
+## Statistics over Linked Data
+
+Here we'll see how we can use standard data analytics over RDF data, via *Pandas*. Pandas is a library for data manipulation and analysis, especially useful for numeric table data.
+
+We'll use Pandas and URLLib.
+
+import pandas as pd, urllib
+from pandas.plotting import scatter_matrix
+
+We set the display format for float values.
+
+pd.options.display.float_format = '{:,.0f}'.format
+
+Set the parameters.
+
+# Medicine - Dbpedia
+
+query = """
+select distinct ?predicate ?object
+where {
+dbr:Medicine ?predicate ?object
+}
+LIMIT 100
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org', 
+                                'query': query, 
+                                'format': 'text/csv'})
+
+We read the data from the SPARQL endpoint using it as a REST service. The data is returned in CSV, through implicit content negotiation, and is loaded directly using Pandas.
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+# Medicine property - sameAs
+
+query = """
+select distinct ?object
+where {
+dbr:Medicine owl:sameAs ?object
+}
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org', 
+                                'query': query, 
+                                'format': 'text/csv'})
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+# Medicine property - academicDiscipline
+
+query = """
+select distinct ?subject
+where {
+ ?subject dbo:academicDiscipline dbr:Medicine .
+}
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+
+param = urllib.parse.urlencode({'query': query})
+
+query = """
+select distinct ?person ?name ?birthPlace ?birthLat ?birthLong ?deathPlace ?deathLat ?deathLong 
+where { ?person dbo:academicDiscipline  dbr:Medicine ;
+                           dbo:birthPlace ?birthPlace ;
+                           dbo:deathPlace ?deathPlace ;
+                           dbp:name ?name .
+                       ?birthPlace  geo:lat ?birthLat ;
+                         geo:long ?birthLong .
+                       ?deathPlace geo:lat ?deathLat ;
+                                            geo:long ?deathLong .
+}
+
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org', 
+                                'query': query, 
+                                'format': 'text/csv'})
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+# Birht place of people which Medicine is their academic discipline
+
+fig = plt.figure(figsize=(8, 8))
+m = Basemap(projection='cyl', resolution=None,
+            llcrnrlat=-90, urcrnrlat=90,
+            llcrnrlon=-180, urcrnrlon=180, )
+m.etopo(scale=0.5, alpha=0.5)
+
+for index, row in data.iterrows():
+    x, y = m(row['birthLong'], row['birthLat'])
+    plt.plot(x, y, 'ok', markersize=5)
+    #plt.text(x, y, row['name'], fontsize=12);
+    plt.text(x, y, '', fontsize=12);
+
+# Death place of people which Medicine is their academic discipline
+
+fig = plt.figure(figsize=(8, 8))
+m = Basemap(projection='cyl', resolution=None,
+            llcrnrlat=-90, urcrnrlat=90,
+            llcrnrlon=-180, urcrnrlon=180, )
+m.etopo(scale=0.5, alpha=0.5)
+
+for index, row in data.iterrows():
+    x, y = m(row['deathLong'], row['deathLat'])
+    plt.plot(x, y, 'ok', markersize=5)
+    #plt.text(x, y, row['name'], fontsize=12);
+    plt.text(x, y, '', fontsize=12);
+
+# Medicine property - activeSector
+
+query = """
+select distinct ?subject
+where {
+ ?subject dbp:activitySector dbr:Medicine
+}
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org', 
+                                'query': query, 
+                                'format': 'text/csv'})
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+# Medicine property - discipline
+
+query = """
+select distinct  ?name ?impactFactor ?openAccess
+where { 
+?Thing dbp:discipline dbr:Medicine ;
+           dbo:impactFactor ?impactFactor ;
+          dbo:openAccessContent ?openAccess ;
+           foaf:name ?name .
+           
+}
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org', 
+                                'query': query, 
+                                'format': 'text/csv'})
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+# Impact factor of medical jurnals
+
+import plotly.express as px
+
+fig = px.line(x=data['name'], y=data['impactFactor'], title="Impact factor")
+print(fig)
+fig.show()
+
+# Which of the medical jurnals have open access along with their imapct factor
+
+import plotly.graph_objects as go
+
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv")
+df.columns = [col.replace("AAPL.", "") for col in df.columns]
+
+# Initialize figure
+fig = go.Figure()
+
+# Add Traces
+
+fig.add_trace(
+    go.Scatter(x=list(df.index),
+               y=list(df.High),
+               name="High",
+               line=dict(color="#33CFA5")))
+
+fig.add_trace(
+    go.Scatter(x=list(df.index),
+               y=[df.High.mean()] * len(df.index),
+               name="High Average",
+               visible=False,
+               line=dict(color="#33CFA5", dash="dash")))
+
+fig.add_trace(
+    go.Scatter(x=list(df.index),
+               y=list(df.Low),
+               name="Low",
+               line=dict(color="#F06A6A")))
+
+fig.add_trace(
+    go.Scatter(x=list(df.index),
+               y=[df.Low.mean()] * len(df.index),
+               name="Low Average",
+               visible=False,
+               line=dict(color="#F06A6A", dash="dash")))
+
+# Add Annotations and Buttons
+high_annotations = [dict(x="2016-03-01",
+                         y=df.High.mean(),
+                         xref="x", yref="y",
+                         text="High Average:<br> %.3f" % df.High.mean(),
+                         ax=0, ay=-40),
+                    dict(x=df.High.idxmax(),
+                         y=df.High.max(),
+                         xref="x", yref="y",
+                         text="High Max:<br> %.3f" % df.High.max(),
+                         ax=0, ay=-40)]
+low_annotations = [dict(x="2015-05-01",
+                        y=df.Low.mean(),
+                        xref="x", yref="y",
+                        text="Low Average:<br> %.3f" % df.Low.mean(),
+                        ax=0, ay=40),
+                   dict(x=df.High.idxmin(),
+                        y=df.Low.min(),
+                        xref="x", yref="y",
+                        text="Low Min:<br> %.3f" % df.Low.min(),
+                        ax=0, ay=40)]
+
+fig.update_layout(
+    updatemenus=[
+        dict(
+            active=0,
+            buttons=list([
+                dict(label="None",
+                     method="update",
+                     args=[{"visible": [True, False, True, False]},
+                           {"title": "Yahoo",
+                            "annotations": []}]),
+                dict(label="High",
+                     method="update",
+                     args=[{"visible": [True, True, False, False]},
+                           {"title": "Yahoo High",
+                            "annotations": high_annotations}]),
+                dict(label="Low",
+                     method="update",
+                     args=[{"visible": [False, False, True, True]},
+                           {"title": "Yahoo Low",
+                            "annotations": low_annotations}]),
+                dict(label="Both",
+                     method="update",
+                     args=[{"visible": [True, True, True, True]},
+                           {"title": "Yahoo",
+                            "annotations": high_annotations + low_annotations}]),
+            ]),
+        )
+    ])
+
+# Set title
+fig.update_layout(title_text="Yahoo")
+
+fig.show()
+
+# Medicine property - industryof
+
+query = """
+select distinct ?subject
+where {
+ ?subject dbp:industry dbr:Medicine
+}
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org', 
+                                'query': query, 
+                                'format': 'text/csv'})
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+Some companies may have multiple values for 'revenue' or 'number of employees', so we need to remove all duplicates.
+
+data = data.drop_duplicates(subset='company')
+print(data)
+
+Now we can manipulate with the data in a regular Pandas manner. Here, we print the first two rows of the DataFrame, with these 3 specific columns only.
+
+data[['name','numEmployees','revenue']].head(3)
+
+To view the statistics for any column of the DataFrame, we can use these Pandas methods.
+
+data.revenue.describe()
+
+Histogram for all numeric values in the DataFrame, i.e. 'revenue' and 'numEmployees'. We use 'bins=20' to specify the number of stacks to 20, instead of the default 10.
+
+data.hist(bins=20)
+
+Bar plot for the 'revenue' values, on a DataFrame sorted by 'revenue'.
+
+data.sort_values(by='revenue')[['name','revenue']].plot.bar(x='name')
+
+Scatter plot representing the number of employees on one axis, and the revenue on the other.
+
+data.plot.scatter(x='numEmployees', y='revenue')
+
+When two or more numerical columns exist in the DataFrame, we can plot all pairs of columns on separate plots, grouped together on a single figure. On the diagonal, where the same column is plotted on both axis, we use 'kde' which produces a histogram plot.
+
+scatter_matrix(data, diagonal='kde')
+
+The selected companies have an 'industry' value. We can use it to group them by industry, where all numerical values ('revenue' and 'numEmployees') per a company in a given industry will be summarized.
+
+grouped = data.groupby('industry').sum()
+print(grouped)
+
+Now we can make a scatter plot over the grouped DataFrame which contains 371 industries, with summarized values for 'numEmployees' and 'revenue'.
+
+grouped.plot.scatter(x='numEmployees', y='revenue')
+
+A scatter matrix for the industries.
+
+scatter_matrix(grouped, diagonal='kde')
+
+grouped.revenue.describe()
+
+## Clustering over Linked Data
+
+As a final example, we'll use clustering over RDF data in order to determine similar entities based on their characteristics. We'll continue with the domain of companies selected from DBpedia.
+
+We'll use Pandas, URLLib, MatPlotLib and SciKit.
+
+import pandas as pd, urllib
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans,AgglomerativeClustering,AffinityPropagation
+from sklearn.mixture import GaussianMixture
+
+Set the parameters.
+
+query = """
+SELECT ?company ?numEmployees ?revenue ?name ?wikipage ?industry
+WHERE {
+    ?company dbo:industry ?industry ;
+             dbo:numberOfEmployees ?numEmployees ;
+             dbo:revenue ?revenue ;
+             foaf:name ?name ;
+             foaf:isPrimaryTopicOf ?wikipage .
+    FILTER (?numEmployees > 10000 && ?numEmployees < 200000)
+    FILTER (xsd:integer(?revenue) > 500000 && 
+            xsd:integer(?revenue) < 100000000000)
+}
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org',
+                                'query': query,
+                                'format': 'text/csv'})
+
+We read the data from the SPARQL endpoint using it as a REST service. The data is returned in CSV, through implicit content negotiation, and is loaded directly using Pandas.
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+Some companies may have multiple values for 'revenue' or 'number of employees', so we need to remove all duplicates.
+
+data = data.drop_duplicates(subset='company')
+print(data)
+
+We create a method for [K-Means clustering](https://en.wikipedia.org/wiki/K-means_clustering), to simply wrap the process in a single method call.
+
+def doKmeans(X, nclust=2):
+    model = KMeans(nclust)
+    model.fit(X)
+    clust_labels = model.predict(X)
+    cent = model.cluster_centers_
+    return (clust_labels, cent)
+
+We create a new DataFrame with only two columns: 'revenue' and 'numEmployees'.
+
+datashort = data[['revenue','numEmployees']]
+print(datashort)
+
+We perform the clustering, using 5 clusters.
+
+clust_labels, cent = doKmeans(datashort, 5)
+kmeans = pd.DataFrame(clust_labels)
+
+# We insert the clustering data into our DataFrame
+datashort.insert((datashort.shape[1]),'kmeans',kmeans)
+print(datashort)
+
+Now we plot the companies on a scatter plot, adding color to represent the cluster each company belongs to.
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+scatter = ax.scatter(datashort['numEmployees'],
+                     datashort['revenue'],c=kmeans[0])
+ax.set_title('K-Means Clustering')
+ax.set_xlabel('Number of Employees')
+ax.set_ylabel('Revenue')
+plt.colorbar(scatter)
+
+Next, we create a method for [Agglomerative clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering).
+
+def doAgglomerative(X, nclust=2):
+    model = AgglomerativeClustering(n_clusters=nclust, 
+                                    affinity = 'euclidean', linkage = 'ward')
+    clust_labels1 = model.fit_predict(X)
+    return (clust_labels1)
+
+We re-create the short DataFrame with only two columns: 'revenue' and 'numEmployees'.
+
+datashort = data[['revenue','numEmployees']]
+print(datashort)
+
+We perform the clustering, using 5 clusters.
+
+clust_labels1 = doAgglomerative(datashort, 5)
+agglomerative = pd.DataFrame(clust_labels1)
+
+# We insert the clustering data into our DataFrame
+datashort.insert((datashort.shape[1]),'agglomerative',agglomerative)
+print(datashort)
+
+Now we plot the companies on a scatter plot, adding color to represent the cluster each company belongs to.
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+scatter = ax.scatter(datashort['numEmployees'],
+                     datashort['revenue'],c=agglomerative[0],s=50)
+ax.set_title('Agglomerative Clustering')
+ax.set_xlabel('Number of Employees')
+ax.set_ylabel('Revenue')
+plt.colorbar(scatter)
+
+We create a method for [Affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation).
+
+def doAffinity(X):
+    model = AffinityPropagation(damping = 0.9, 
+                                max_iter = 250, affinity = 'euclidean')
+    model.fit(X)
+    clust_labels2 = model.predict(X)
+    cent2 = model.cluster_centers_
+    return (clust_labels2, cent2)
+
+We re-create the short DataFrame with only two columns: 'revenue' and 'numEmployees'.
+
+datashort = data[['revenue','numEmployees']]
+print(datashort)
+
+We perform the clustering.
+
+clust_labels2, cent2 = doAffinity(datashort)
+affinity = pd.DataFrame(clust_labels2)
+
+# We insert the clustering data into our DataFrame.
+datashort.insert((datashort.shape[1]),'affinity',affinity)
+print(datashort)
+
+Now we plot the companies on a scatter plot, adding color to represent the cluster each company belongs to.
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+scatter = ax.scatter(datashort['numEmployees'],
+                     datashort['revenue'],c=affinity[0],s=50)
+ax.set_title('Affinity Clustering')
+ax.set_xlabel('Number of Employees')
+ax.set_ylabel('Revenue')
+plt.colorbar(scatter)
+
+We create a method for [Gaussian mixtures](https://en.wikipedia.org/wiki/Mixture_model).
+
+def doGMM(X, nclust=2):
+    model = GaussianMixture(n_components=nclust,init_params='kmeans')
+    model.fit(X)
+    clust_labels3 = model.predict(X)
+    return (clust_labels3)
+
+We re-create the short DataFrame with only two columns: 'revenue' and 'numEmployees'.
+
+datashort = data[['revenue','numEmployees']]
+print(datashort)
+
+We perform the clustering.
+
+clust_labels3 = doGMM(datashort,5)
+gmm = pd.DataFrame(clust_labels3)
+
+# We insert the clustering data into our DataFrame.
+datashort.insert((datashort.shape[1]),'gmm',gmm)
+print(datashort)
+
+Now we plot the companies on a scatter plot, adding color to represent the cluster each company belongs to.
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+scatter = ax.scatter(datashort['numEmployees'],
+                     datashort['revenue'],c=gmm[0],s=50)
+ax.set_title('Gaussian Clustering')
+ax.set_xlabel('Number of Employees')
+ax.set_ylabel('Revenue')
+plt.colorbar(scatter)

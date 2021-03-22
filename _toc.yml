@@ -1,0 +1,16 @@
+- file: intro
+  title: "Introduction" 
+
+- part: "Content"
+  chapters:
+  - file: 01/medicine
+    title: "Medicine"
+
+- part: "External resources"
+  chapters:
+  - url: https://github.com/dimitarmileski/Medical-KGs-WBS
+    title: "Github Repo"
+  - url: https://www.dbpedia.org/
+    title: "DBpedia" 
+  - url: https://dbpedia.org/sparql
+    title: "SparQL" 
