@@ -1,5 +1,5 @@
 # Introduction
-<img src="images/Logo_FINKI_UKIM_EN.jpg" width="400px" align="left">
+<img src="https://raw.githubusercontent.com/dimitarmileski/Medical-KGs-WBS/main/images/Logo_FINKI_UKIM_EN.jpg" width="400px" align="left">
 <br>
 <br>
 <br>
