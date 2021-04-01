@@ -1,0 +1,984 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graph Visualization with ipycytoscape &#8212; Medical Knowledge Graphs-Web Based Systems</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.e7340bb3dbd8dde6db86f25597f54a1b.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.7d483ff0a819d6edff12ce0b1ead3928.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe,.cell"
+        const thebe_selector_input = "pre,.cell_input div.highlight"
+        const thebe_selector_output = ".output,.cell_output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Clustering over Medical Linked Data" href="../02/Clustering_over_Medical_Linked_Data.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../index.html">
+  
+  <img src="../_static/logo.jpg" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Medical Knowledge Graphs-Web Based Systems</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../intro.html">
+   Introduction
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Content
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../01/medicine.html">
+   Medicine
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../02/Clustering_over_Medical_Linked_Data.html">
+   Clustering over Medical KGs
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Visualisation COVID-19-Net Knowledge Graph
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  External resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference external" href="https://github.com/dimitarmileski/Medical-KGs-WBS">
+   Github Repo
+   <i class="fas fa-external-link-alt">
+   </i>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference external" href="https://www.dbpedia.org/">
+   DBpedia
+   <i class="fas fa-external-link-alt">
+   </i>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference external" href="https://dbpedia.org/sparql">
+   SparQL
+   <i class="fas fa-external-link-alt">
+   </i>
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>, <a href="http://www.freepik.com">Logo designed by vectorjuice / Freepik</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/03/GraphVisualization.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/dimitarmileski/Medical-KGs-WBS"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/dimitarmileski/Medical-KGs-WBS/issues/new?title=Issue%20on%20page%20%2F03/GraphVisualization.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/dimitarmileski/Medical-KGs-WBS/edit/main/03/GraphVisualization.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+            <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                    data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                    title="Fullscreen mode"><i
+                        class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/dimitarmileski/Medical-KGs-WBS/main?urlpath=lab/tree/03/GraphVisualization.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        <button type="button" class="btn btn-secondary topbarbtn"
+            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
+                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i>
+            Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#node-and-edge-styles">
+   Node and edge styles
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#node-colors">
+   Node colors
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-a-neo4j-database">
+   Connect to a Neo4j Database
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-1-find-all-cities-with-the-name-san-francisco">
+   Example 1: Find all cities with the name “San Francisco”
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#add-neo4j-subgraph-to-cytoscape-widget">
+     Add Neo4j subgraph to Cytoscape Widget
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-node-and-edge-styles">
+     Set node and edge styles
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-node-specific-colors-based-on-node-labels">
+     Set node specific colors based on node labels
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-2-find-all-proteins-that-interact-with-the-sars-cov-2-spike-protein">
+   Example 2: Find all proteins that interact with the SARS-CoV-2 Spike protein
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-3-explore-the-data-sources-used-to-create-the-covid-19-net-knowledge-graph">
+   Example 3: Explore the Data Sources used to create the COVID-19-Net Knowledge Graph
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-4-create-a-metagraph-that-shows-the-nodes-and-their-relationships-in-the-covid-19-net-knowledge-graph">
+   Example 4: Create a Metagraph that shows the Nodes and their Relationships in the COVID-19-Net Knowledge Graph
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="graph-visualization-with-ipycytoscape">
+<h1>Graph Visualization with ipycytoscape<a class="headerlink" href="#graph-visualization-with-ipycytoscape" title="Permalink to this headline">¶</a></h1>
+<p>This notebook demonstrates the visualization of subgraphs from the <a class="reference external" href="https://neo4j.com/">Neo4j</a> Graph Database. It uses the <a class="reference external" href="https://py2neo.org/">py2neo</a> library to access a Neo4j database instance.</p>
+<p>The examples in this notebook access the <a class="reference external" href="https://github.com/covid-19-net/covid-19-community">COVID-19-Net</a> Knowledge Graph.</p>
+<p>Author: Peter W. Rose (<a class="reference external" href="mailto:pwrose&#37;&#52;&#48;ucsd&#46;edu">pwrose<span>&#64;</span>ucsd<span>&#46;</span>edu</a>)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install ipycytoscape
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting ipycytoscape
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: You are using pip version 20.0.2; however, version 21.0.1 is available.
+You should consider upgrading via the &#39;C:\Users\Dimitar\Anaconda3\envs\jupyterbook_env\python.exe -m pip install --upgrade pip&#39; command.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading ipycytoscape-1.2.0-py2.py3-none-any.whl (3.6 MB)
+Requirement already satisfied: ipywidgets&gt;=7.6.0 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipycytoscape) (7.6.3)
+Collecting networkx
+  Using cached networkx-2.5-py3-none-any.whl (1.6 MB)
+Collecting spectate&gt;=0.4.1
+  Downloading spectate-1.0.1-py2.py3-none-any.whl (11 kB)
+Requirement already satisfied: nbformat&gt;=4.2.0 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (5.1.2)
+Requirement already satisfied: jupyterlab-widgets&gt;=1.0.0; python_version &gt;= &quot;3.6&quot; in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (1.0.0)
+Requirement already satisfied: widgetsnbextension~=3.5.0 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (3.5.1)
+Requirement already satisfied: ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot; in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (7.19.0)
+Requirement already satisfied: traitlets&gt;=4.3.1 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (4.3.3)
+Requirement already satisfied: ipykernel&gt;=4.5.1 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (5.1.4)
+Requirement already satisfied: decorator&gt;=4.3.0 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from networkx-&gt;ipycytoscape) (4.4.1)
+Requirement already satisfied: ipython-genutils in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.2.0)
+Requirement already satisfied: jsonschema!=2.5.0,&gt;=2.4 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (3.2.0)
+Requirement already satisfied: jupyter-core in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (4.6.3)
+Requirement already satisfied: notebook&gt;=4.4.1 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (6.0.3)
+Requirement already satisfied: setuptools&gt;=18.5 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (51.1.2.post20210112)
+Requirement already satisfied: colorama; sys_platform == &quot;win32&quot; in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.4.3)
+Requirement already satisfied: backcall in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.1.0)
+Requirement already satisfied: prompt-toolkit!=3.0.0,!=3.0.1,&lt;3.1.0,&gt;=2.0.0 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (3.0.3)
+Requirement already satisfied: pickleshare in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.7.5)
+Requirement already satisfied: pygments in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (2.5.2)
+Requirement already satisfied: jedi&gt;=0.10 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.16.0)
+Requirement already satisfied: six in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from traitlets&gt;=4.3.1-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (1.14.0)
+Requirement already satisfied: tornado&gt;=4.2 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from ipykernel&gt;=4.5.1-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (6.0.3)
+Requirement already satisfied: jupyter-client in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from ipykernel&gt;=4.5.1-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (6.1.11)
+Requirement already satisfied: pyrsistent&gt;=0.14.0 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.17.3)
+Requirement already satisfied: attrs&gt;=17.4.0 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (20.3.0)
+Requirement already satisfied: importlib-metadata; python_version &lt; &quot;3.8&quot; in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (1.5.0)
+Requirement already satisfied: pywin32&gt;=1.0; sys_platform == &quot;win32&quot; in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from jupyter-core-&gt;nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (227)
+Requirement already satisfied: pyzmq&gt;=17 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (18.1.1)
+Requirement already satisfied: jinja2 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (2.11.2)
+Requirement already satisfied: terminado&gt;=0.8.1 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.8.3)
+Requirement already satisfied: Send2Trash in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (1.5.0)
+Requirement already satisfied: nbconvert in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (5.6.1)
+Requirement already satisfied: prometheus-client in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.7.1)
+Requirement already satisfied: wcwidth in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from prompt-toolkit!=3.0.0,!=3.0.1,&lt;3.1.0,&gt;=2.0.0-&gt;ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.1.8)
+Requirement already satisfied: parso&gt;=0.5.2 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from jedi&gt;=0.10-&gt;ipython&gt;=4.0.0; python_version &gt;= &quot;3.3&quot;-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.6.1)
+Requirement already satisfied: python-dateutil&gt;=2.1 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from jupyter-client-&gt;ipykernel&gt;=4.5.1-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (2.8.1)
+Requirement already satisfied: zipp&gt;=0.5 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from importlib-metadata; python_version &lt; &quot;3.8&quot;-&gt;jsonschema!=2.5.0,&gt;=2.4-&gt;nbformat&gt;=4.2.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (3.0.0)
+Requirement already satisfied: MarkupSafe&gt;=0.23 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from jinja2-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (1.1.1)
+Requirement already satisfied: pywinpty&gt;=0.5; os_name == &quot;nt&quot; in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from terminado&gt;=0.8.1-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.5.7)
+Requirement already satisfied: mistune&lt;2,&gt;=0.8.1 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbconvert-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.8.4)
+Requirement already satisfied: defusedxml in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbconvert-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.6.0)
+Requirement already satisfied: pandocfilters&gt;=1.4.1 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbconvert-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (1.4.2)
+Requirement already satisfied: testpath in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbconvert-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.4.4)
+Requirement already satisfied: entrypoints&gt;=0.2.2 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbconvert-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.3)
+Requirement already satisfied: bleach in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from nbconvert-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (3.1.1)
+Requirement already satisfied: webencodings in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from bleach-&gt;nbconvert-&gt;notebook&gt;=4.4.1-&gt;widgetsnbextension~=3.5.0-&gt;ipywidgets&gt;=7.6.0-&gt;ipycytoscape) (0.5.1)
+Installing collected packages: networkx, spectate, ipycytoscape
+Successfully installed ipycytoscape-1.2.0 networkx-2.5 spectate-1.0.1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install <span class="nv">py2neo</span><span class="o">==</span><span class="m">2021</span>.0.1
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting py2neo==2021.0.1
+  Downloading py2neo-2021.0.1-py2.py3-none-any.whl (195 kB)
+Collecting docker
+  Downloading docker-4.4.4-py2.py3-none-any.whl (147 kB)
+Collecting monotonic
+  Downloading monotonic-1.5-py2.py3-none-any.whl (5.3 kB)
+Collecting neotime~=1.7.4
+  Downloading neotime-1.7.4.tar.gz (17 kB)
+Requirement already satisfied: pygments&gt;=2.0.0 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from py2neo==2021.0.1) (2.5.2)
+Requirement already satisfied: pytz in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from py2neo==2021.0.1) (2020.5)
+Collecting cryptography
+  Downloading cryptography-3.4.7-cp36-abi3-win_amd64.whl (1.6 MB)
+Requirement already satisfied: packaging in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from py2neo==2021.0.1) (20.8)
+Collecting six&gt;=1.15.0
+  Using cached six-1.15.0-py2.py3-none-any.whl (10 kB)
+Collecting english
+  Downloading english-2020.7.0-py2.py3-none-any.whl (8.1 kB)
+Requirement already satisfied: urllib3 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from py2neo==2021.0.1) (1.26.2)
+Collecting pansi&gt;=2020.7.3
+  Downloading pansi-2020.7.3-py2.py3-none-any.whl (10 kB)
+Requirement already satisfied: certifi in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from py2neo==2021.0.1) (2020.12.5)
+Collecting prompt-toolkit~=2.0.7
+  Downloading prompt_toolkit-2.0.10-py3-none-any.whl (340 kB)
+Collecting websocket-client&gt;=0.32.0
+  Downloading websocket_client-0.58.0-py2.py3-none-any.whl (61 kB)
+Requirement already satisfied: pywin32==227; sys_platform == &quot;win32&quot; in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from docker-&gt;py2neo==2021.0.1) (227)
+Requirement already satisfied: requests!=2.18.0,&gt;=2.14.2 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from docker-&gt;py2neo==2021.0.1) (2.25.1)
+Requirement already satisfied: cffi&gt;=1.12 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from cryptography-&gt;py2neo==2021.0.1) (1.14.4)
+Requirement already satisfied: pyparsing&gt;=2.0.2 in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from packaging-&gt;py2neo==2021.0.1) (2.4.6)
+Requirement already satisfied: wcwidth in c:\users\dimitar\appdata\roaming\python\python37\site-packages (from prompt-toolkit~=2.0.7-&gt;py2neo==2021.0.1) (0.1.8)
+Requirement already satisfied: idna&lt;3,&gt;=2.5 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from requests!=2.18.0,&gt;=2.14.2-&gt;docker-&gt;py2neo==2021.0.1) (2.10)
+Requirement already satisfied: chardet&lt;5,&gt;=3.0.2 in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from requests!=2.18.0,&gt;=2.14.2-&gt;docker-&gt;py2neo==2021.0.1) (4.0.0)
+Requirement already satisfied: pycparser in c:\users\dimitar\anaconda3\envs\jupyterbook_env\lib\site-packages (from cffi&gt;=1.12-&gt;cryptography-&gt;py2neo==2021.0.1) (2.20)
+Building wheels for collected packages: neotime
+  Building wheel for neotime (setup.py): started
+  Building wheel for neotime (setup.py): finished with status &#39;done&#39;
+  Created wheel for neotime: filename=neotime-1.7.4-py3-none-any.whl size=20541 sha256=694a6f5e9b69da01f5bf38f088134ac8f2a5b71a0c0fba3074d354ae10bf3bfe
+  Stored in directory: c:\users\dimitar\appdata\local\pip\cache\wheels\1b\53\64\de72baae858a94a3ed2c6b1117edf988b2b8d57b798097e5b3
+Successfully built neotime
+Installing collected packages: six, websocket-client, docker, monotonic, neotime, cryptography, english, pansi, prompt-toolkit, py2neo
+  Attempting uninstall: six
+    Found existing installation: six 1.14.0
+    Uninstalling six-1.14.0:
+      Successfully uninstalled six-1.14.0
+  Attempting uninstall: prompt-toolkit
+    Found existing installation: prompt-toolkit 3.0.3
+    Uninstalling prompt-toolkit-3.0.3:
+      Successfully uninstalled prompt-toolkit-3.0.3
+Successfully installed cryptography-3.4.7 docker-4.4.4 english-2020.7.0 monotonic-1.5 neotime-1.7.4 pansi-2020.7.3 prompt-toolkit-3.0.8 py2neo-2021.0.1 six-1.15.0 websocket-client-0.58.0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ERROR: nbinteract 0.2.6 has requirement nbformat&lt;5,&gt;=4.4.0, but you&#39;ll have nbformat 5.1.2 which is incompatible.
+WARNING: You are using pip version 20.0.2; however, version 21.0.1 is available.
+You should consider upgrading via the &#39;C:\Users\Dimitar\Anaconda3\envs\jupyterbook_env\python.exe -m pip install --upgrade pip&#39; command.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">ipycytoscape</span>
+<span class="kn">from</span> <span class="nn">py2neo</span> <span class="kn">import</span> <span class="n">Graph</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="node-and-edge-styles">
+<h2>Node and edge styles<a class="headerlink" href="#node-and-edge-styles" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">node_centered</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;node&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;font-size&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;data(name)&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;80&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;text-max-width&#39;</span><span class="p">:</span> <span class="s1">&#39;80&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;text-wrap&#39;</span><span class="p">:</span> <span class="s1">&#39;wrap&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;text-valign&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;background-color&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;background-opacity&#39;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">}</span>
+             <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">edge_directed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;style&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;line-color&#39;</span><span class="p">:</span> <span class="s1">&#39;#9dbaea&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;target-arrow-shape&#39;</span><span class="p">:</span> <span class="s1">&#39;triangle&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;target-arrow-color&#39;</span><span class="p">:</span> <span class="s1">&#39;#9dbaea&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;curve-style&#39;</span><span class="p">:</span> <span class="s1">&#39;bezier&#39;</span><span class="p">}</span>
+                <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">edge_directed_named</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;style&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;font-size&#39;</span><span class="p">:</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;data(name)&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;line-color&#39;</span><span class="p">:</span> <span class="s1">&#39;#9dbaea&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;text-rotation&#39;</span><span class="p">:</span> <span class="s1">&#39;autorotate&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;target-arrow-shape&#39;</span><span class="p">:</span> <span class="s1">&#39;triangle&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;target-arrow-color&#39;</span><span class="p">:</span> <span class="s1">&#39;#9dbaea&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;curve-style&#39;</span><span class="p">:</span> <span class="s1">&#39;bezier&#39;</span><span class="p">}</span>
+                <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">edge_undirected</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;style&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;line-color&#39;</span><span class="p">:</span> <span class="s1">&#39;#9dbaea&#39;</span><span class="p">}</span>
+                  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="node-colors">
+<h2>Node colors<a class="headerlink" href="#node-colors" title="Permalink to this headline">¶</a></h2>
+<p>Change seed to select a different color palette.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">random_color_palette</span><span class="p">(</span><span class="n">n_colors</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Creates a random color palette of n_colors </span>
+<span class="sd">    See https://stackoverflow.com/questions/28999287/generate-random-colors-rgb</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;#&#39;</span><span class="o">+</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s1">&#39;0123456789ABCDEF&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_colors</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="connect-to-a-neo4j-database">
+<h2>Connect to a Neo4j Database<a class="headerlink" href="#connect-to-a-neo4j-database" title="Permalink to this headline">¶</a></h2>
+<p>Here we use the <a class="reference external" href="https://github.com/covid-19-net/covid-19-community">COVID-19-Net</a> Knowledge Graph to demonstrate how to run a Neo4j Cypher query and pass the resulting subgraph into Cytoscape.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span><span class="s2">&quot;bolt://132.249.238.185:7687&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;reader&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="example-1-find-all-cities-with-the-name-san-francisco">
+<h2>Example 1: Find all cities with the name “San Francisco”<a class="headerlink" href="#example-1-find-all-cities-with-the-name-san-francisco" title="Permalink to this headline">¶</a></h2>
+<p>This query demonstrates the geographic hierachy in COVID-19-Net.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">MATCH p=(:City{name:&#39;Skopje&#39;})-[:IN*]-&gt;(:World) RETURN p</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">subgraph1</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">query1</span><span class="p">)</span><span class="o">.</span><span class="n">to_subgraph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="add-neo4j-subgraph-to-cytoscape-widget">
+<h3>Add Neo4j subgraph to Cytoscape Widget<a class="headerlink" href="#add-neo4j-subgraph-to-cytoscape-widget" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget1</span> <span class="o">=</span> <span class="n">ipycytoscape</span><span class="o">.</span><span class="n">CytoscapeWidget</span><span class="p">()</span>
+<span class="n">widget1</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">add_graph_from_neo4j</span><span class="p">(</span><span class="n">subgraph1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">16</span><span class="o">-</span><span class="mi">4771711</span><span class="n">b4d9c</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">widget1</span> <span class="o">=</span> <span class="n">ipycytoscape</span><span class="o">.</span><span class="n">CytoscapeWidget</span><span class="p">()</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">widget1</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">add_graph_from_neo4j</span><span class="p">(</span><span class="n">subgraph1</span><span class="p">)</span>
+
+<span class="ne">AttributeError</span>: &#39;Graph&#39; object has no attribute &#39;add_graph_from_neo4j&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="set-node-and-edge-styles">
+<h3>Set node and edge styles<a class="headerlink" href="#set-node-and-edge-styles" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">style1</span> <span class="o">=</span> <span class="p">[</span><span class="n">node_centered</span><span class="p">,</span> <span class="n">edge_directed</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="set-node-specific-colors-based-on-node-labels">
+<h3>Set node specific colors based on node labels<a class="headerlink" href="#set-node-specific-colors-based-on-node-labels" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subgraph1</span><span class="o">.</span><span class="n">labels</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Node labels:&#39;</span><span class="p">,</span> <span class="n">labels1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors1</span> <span class="o">=</span> <span class="n">random_color_palette</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels1</span><span class="p">,</span> <span class="n">colors1</span><span class="p">):</span>
+    <span class="n">style1</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;node[label = &quot;&#39;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;background-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">}})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget1</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget1</span><span class="o">.</span><span class="n">set_layout</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;dagre&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>When a Neo4j subgraph is added to a Cytoscape graph, a tooltip attribute is generated that contains all Neo4j node properties.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget1</span><span class="o">.</span><span class="n">set_tooltip_source</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Click on a node to show the tooltip</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "99995402d4a64b4693806aaba1150a47", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+</div>
+</div>
+<div class="section" id="example-2-find-all-proteins-that-interact-with-the-sars-cov-2-spike-protein">
+<h2>Example 2: Find all proteins that interact with the SARS-CoV-2 Spike protein<a class="headerlink" href="#example-2-find-all-proteins-that-interact-with-the-sars-cov-2-spike-protein" title="Permalink to this headline">¶</a></h2>
+<p>Here we run an undirected query (no “-&gt;” arrow) since the direction of interaction is arbitrary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query2</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">MATCH p=(:Protein{name: &#39;Spike glycoprotein&#39;, taxonomyId: &#39;taxonomy:2697049&#39;})-[:INTERACTS_WITH]-(:Protein) RETURN p</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">subgraph2</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">query2</span><span class="p">)</span><span class="o">.</span><span class="n">to_subgraph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget2</span> <span class="o">=</span> <span class="n">ipycytoscape</span><span class="o">.</span><span class="n">CytoscapeWidget</span><span class="p">()</span>
+<span class="n">widget2</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">add_graph_from_neo4j</span><span class="p">(</span><span class="n">subgraph2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">style2</span> <span class="o">=</span> <span class="p">[</span><span class="n">node_centered</span><span class="p">,</span> <span class="n">edge_undirected</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subgraph2</span><span class="o">.</span><span class="n">labels</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Node labels:&#39;</span><span class="p">,</span> <span class="n">labels2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Node labels: [&#39;Protein&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors2</span> <span class="o">=</span> <span class="n">random_color_palette</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels2</span><span class="p">,</span> <span class="n">colors2</span><span class="p">):</span>
+    <span class="n">style2</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;node[label = &quot;&#39;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;background-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">}})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget2</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget2</span><span class="o">.</span><span class="n">set_layout</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;concentric&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget2</span><span class="o">.</span><span class="n">set_tooltip_source</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Click on a node to show the tooltip</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b7d6a7f9843e4337959985e4a6780534", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+</div>
+<div class="section" id="example-3-explore-the-data-sources-used-to-create-the-covid-19-net-knowledge-graph">
+<h2>Example 3: Explore the Data Sources used to create the COVID-19-Net Knowledge Graph<a class="headerlink" href="#example-3-explore-the-data-sources-used-to-create-the-covid-19-net-knowledge-graph" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query3</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">MATCH p=(:MetaNode)-[:ETL_FROM]-&gt;(:DataSource) RETURN p  // ETL_FROM: Extracted, transformed, and loaded FROM</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">subgraph3</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">query3</span><span class="p">)</span><span class="o">.</span><span class="n">to_subgraph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget3</span> <span class="o">=</span> <span class="n">ipycytoscape</span><span class="o">.</span><span class="n">CytoscapeWidget</span><span class="p">()</span>
+<span class="n">widget3</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">add_graph_from_neo4j</span><span class="p">(</span><span class="n">subgraph3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">style3</span> <span class="o">=</span> <span class="p">[</span><span class="n">node_centered</span><span class="p">,</span> <span class="n">edge_directed</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels3</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subgraph3</span><span class="o">.</span><span class="n">labels</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Node labels:&#39;</span><span class="p">,</span> <span class="n">labels3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Node labels: [&#39;DataSource&#39;, &#39;MetaNode&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors3</span> <span class="o">=</span> <span class="n">random_color_palette</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels3</span><span class="p">,</span> <span class="n">colors3</span><span class="p">):</span>
+    <span class="n">style3</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;node[label = &quot;&#39;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;background-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">}})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget3</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget3</span><span class="o">.</span><span class="n">set_layout</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;klay&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget3</span><span class="o">.</span><span class="n">set_tooltip_source</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Click on a node to show the tooltip</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "0a7ae29a6e3f4e34a24d7623e6c1cef8", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+</div>
+<div class="section" id="example-4-create-a-metagraph-that-shows-the-nodes-and-their-relationships-in-the-covid-19-net-knowledge-graph">
+<h2>Example 4: Create a Metagraph that shows the Nodes and their Relationships in the COVID-19-Net Knowledge Graph<a class="headerlink" href="#example-4-create-a-metagraph-that-shows-the-nodes-and-their-relationships-in-the-covid-19-net-knowledge-graph" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query4</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">MATCH p=(a:MetaNode)-[:META_RELATIONSHIP]-&gt;(b:MetaNode) </span>
+<span class="s2">WHERE a.name &lt;&gt; &#39;Location&#39; AND b.name &lt;&gt; &#39;Location&#39; // exclude Location nodes since they make the graph too crowded</span>
+<span class="s2">RETURN p</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">subgraph4</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">query4</span><span class="p">)</span><span class="o">.</span><span class="n">to_subgraph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget4</span> <span class="o">=</span> <span class="n">ipycytoscape</span><span class="o">.</span><span class="n">CytoscapeWidget</span><span class="p">()</span>
+<span class="n">widget4</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">add_graph_from_neo4j</span><span class="p">(</span><span class="n">subgraph4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">style4</span> <span class="o">=</span> <span class="p">[</span><span class="n">node_centered</span><span class="p">,</span> <span class="n">edge_directed_named</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels4</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subgraph4</span><span class="o">.</span><span class="n">labels</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Node labels:&#39;</span><span class="p">,</span> <span class="n">labels4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Node labels: [&#39;MetaNode&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors4</span> <span class="o">=</span> <span class="n">random_color_palette</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels4</span><span class="p">,</span> <span class="n">colors4</span><span class="p">):</span>
+    <span class="n">style4</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;node[label = &quot;&#39;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;&quot;]&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;background-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">}})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget4</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Cola layout <a class="reference external" href="https://github.com/cytoscape/cytoscape.js-cola#api">options</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget4</span><span class="o">.</span><span class="n">set_layout</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;cola&#39;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nodeSpacing</span><span class="o">=</span><span class="mi">65</span><span class="p">,</span> <span class="n">nodeDimensionsIncludeLabels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unconstrIter</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget4</span><span class="o">.</span><span class="n">set_tooltip_source</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Click on a node to show the node tooltip</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widget4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ce207b8f2d584f8bad587eff4eddf628", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "dimitarmileski/Medical-KGs-WBS",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./03"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="../02/Clustering_over_Medical_Linked_Data.html" title="previous page"><strong>Clustering over Medical Linked Data</strong></a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Dimitar Mileski<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
