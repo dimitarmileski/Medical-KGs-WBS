@@ -5,6 +5,8 @@
   chapters:
   - file: 01/medicine
     title: "Medicine"
+  - file: 02/Clustering_over_Medical_Linked_Data
+    title: "Clustering over Medical KGs"
 
 - part: "External resources"
   chapters:

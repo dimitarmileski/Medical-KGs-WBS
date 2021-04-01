@@ -1,0 +1,235 @@
+# **Clustering over Medical Linked Data**
+
+
+!pip install matplotlib
+
+!apt-get install libgeos-3.5.0
+!apt-get install libgeos-dev
+!pip install https://github.com/matplotlib/basemap/archive/master.zip
+
+!pip install pyproj==1.9.6
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
+
+import requests, pprint
+
+!pip install rdflib
+
+from rdflib import Graph, URIRef, Literal
+from rdflib.namespace import RDFS, FOAF
+
+import pandas as pd, urllib
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans,AgglomerativeClustering,AffinityPropagation
+from sklearn.mixture import GaussianMixture
+
+## Clustering number of deaths and Omim for Oncology diseases 
+
+OMIM - Online Mendelian Inheritance in Man    
+Phenotype MIM number = 603956 | CERVICAL CANCER   
+Omim.org:    
+https://www.omim.org/entry/603956?search=603956&highlight=603956
+
+query = """
+select distinct ?Thing ?Name ?Deaths   ?Omim
+where {  ?Thing  dbp:field dbr:Oncology ;
+                            dbp:name ?Name ;
+                            dbp:deaths ?Deaths;
+                            dbp:omim ?Omim .
+ filter(datatype(?Deaths ) = xsd:integer)
+}
+
+
+"""
+endpoint = "http://dbpedia.org/sparql"
+
+# We need to encode the query string for the HTTP request.
+param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org',
+                                'query': query,
+                                'format': 'text/csv'})
+
+We read the data from the SPARQL endpoint using it as a REST service. The data is returned in CSV, through implicit content negotiation, and is loaded directly using Pandas.
+
+data = pd.read_csv(endpoint + '?' + param)
+print(data)
+
+We create a method for [K-Means clustering](https://en.wikipedia.org/wiki/K-means_clustering), to simply wrap the process in a single method call.
+
+def doKmeans(X, nclust=2):
+    model = KMeans(nclust)
+    model.fit(X)
+    clust_labels = model.predict(X)
+    cent = model.cluster_centers_
+    return (clust_labels, cent)
+
+datashort = data[['Deaths','Omim']]
+print(datashort)
+
+We perform the clustering, using 4 clusters.
+
+clust_labels, cent = doKmeans(datashort, 4)
+kmeans = pd.DataFrame(clust_labels)
+
+# We insert the clustering data into our DataFrame
+datashort.insert((datashort.shape[1]),'kmeans',kmeans)
+print(datashort)
+
+import plotly.graph_objects as go
+import numpy as np
+
+fig = go.Figure(data=go.Scatter(
+    x = datashort['Deaths'],
+    y = datashort['Omim'],
+    mode='markers',
+    marker=dict(
+        size=25,
+        color= kmeans[0], #set color equal to a variable
+        colorscale='BrBG', # one of plotly colorscales
+        showscale=True
+    )
+))
+fig.update_xaxes(title_text='Deaths')
+fig.update_yaxes(title_text='Omim')
+
+
+fig.show()
+
+Next, we create a method for [Agglomerative clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering).
+
+def doAgglomerative(X, nclust=2):
+    model = AgglomerativeClustering(n_clusters=nclust, 
+                                    affinity = 'euclidean', linkage = 'ward')
+    clust_labels1 = model.fit_predict(X)
+    return (clust_labels1)
+
+datashort = data[['Deaths','Omim']]
+print(datashort)
+
+We perform the clustering, using 4 clusters.
+
+clust_labels1 = doAgglomerative(datashort, 4)
+agglomerative = pd.DataFrame(clust_labels1)
+
+# We insert the clustering data into our DataFrame
+datashort.insert((datashort.shape[1]),'agglomerative',agglomerative)
+print(datashort)
+
+Now we plot the companies on a scatter plot, adding color to represent the cluster each company belongs to.
+
+import plotly.graph_objects as go
+import numpy as np
+
+fig = go.Figure(data=go.Scatter(
+    x = datashort['Deaths'],
+    y = datashort['Omim'],
+    mode='markers',
+    marker=dict(
+        size=25,
+        color= agglomerative[0], #set color equal to a variable
+        colorscale='Bluered_r', # one of plotly colorscales
+        showscale=True
+    )
+))
+
+fig.update_xaxes(title_text='Deaths')
+fig.update_yaxes(title_text='Omim')
+
+fig.show()
+
+We create a method for [Affinity propagation](https://en.wikipedia.org/wiki/Affinity_propagation).
+
+def doAffinity(X):
+    model = AffinityPropagation(damping = 0.9, 
+                                max_iter = 250, affinity = 'euclidean')
+    model.fit(X)
+    clust_labels2 = model.predict(X)
+    cent2 = model.cluster_centers_
+    return (clust_labels2, cent2)
+
+datashort = data[['Deaths','Omim']]
+print(datashort)
+
+We perform the clustering.
+
+clust_labels2, cent2 = doAffinity(datashort)
+affinity = pd.DataFrame(clust_labels2)
+
+# We insert the clustering data into our DataFrame.
+datashort.insert((datashort.shape[1]),'affinity',affinity)
+print(datashort)
+
+Now we plot the companies on a scatter plot, adding color to represent the cluster each company belongs to.
+
+import plotly.graph_objects as go
+import numpy as np
+
+fig = go.Figure(data=go.Scatter(
+    x = datashort['Deaths'],
+    y = datashort['Omim'],
+    mode='markers',
+    marker=dict(
+        size=50,
+        color= affinity[0], #set color equal to a variable
+        #colorscale='picnic', # one of plotly colorscales
+        showscale=True
+    )
+))
+
+
+
+fig.update_traces(marker=dict(size=12,
+                              line=dict(width=2,
+                                        color='DarkSlateGrey')),
+                  selector=dict(mode='markers'))
+
+fig.update_xaxes(title_text='Deaths')
+fig.update_yaxes(title_text='Omim')
+
+fig.show()
+
+We create a method for [Gaussian mixtures](https://en.wikipedia.org/wiki/Mixture_model).
+
+def doGMM(X, nclust=2):
+    model = GaussianMixture(n_components=nclust,init_params='kmeans')
+    model.fit(X)
+    clust_labels3 = model.predict(X)
+    return (clust_labels3)
+
+datashort = data[['Deaths','Omim']]
+print(datashort)
+
+We perform the clustering.
+
+clust_labels3 = doGMM(datashort,4)
+gmm = pd.DataFrame(clust_labels3)
+
+# We insert the clustering data into our DataFrame.
+datashort.insert((datashort.shape[1]),'gmm',gmm)
+print(datashort)
+
+import plotly.graph_objects as go
+import numpy as np
+
+fig = go.Figure(data=go.Scatter(
+    x = datashort['Deaths'],
+    y = datashort['Omim'],
+    mode='markers',
+    marker=dict(
+        size=50,
+        color= gmm[0], #set color equal to a variable
+        colorscale='picnic', # one of plotly colorscales
+        showscale=True
+    )
+))
+
+
+
+fig.update_traces(marker=dict(size=12,
+                              line=dict(width=2,
+                                        color='DarkSlateGrey')),
+                  selector=dict(mode='markers'))
+fig.update_xaxes(title_text='Deaths')
+fig.update_yaxes(title_text='Omim')
+
+fig.show()
