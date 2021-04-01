@@ -26,7 +26,7 @@ Here we'll see how we can use standard data analytics over RDF data, via *Pandas
 import pandas as pd, urllib
 from pandas.plotting import scatter_matrix
 
-# Medicine - Dbpedia
+## Medicine - Dbpedia
 
 query = """
 select distinct ?predicate ?object
@@ -47,7 +47,7 @@ We read the data from the SPARQL endpoint using it as a REST service. The data i
 data = pd.read_csv(endpoint + '?' + param)
 print(data)
 
-# Medicine property - sameAs
+## Medicine property - sameAs
 
 query = """
 select distinct ?object
@@ -65,7 +65,7 @@ param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org',
 data = pd.read_csv(endpoint + '?' + param)
 print(data)
 
-# Medicine property - academicDiscipline
+## Medicine property - academicDiscipline
 
 query = """
 select distinct ?subject
@@ -102,7 +102,7 @@ param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org',
 data = pd.read_csv(endpoint + '?' + param)
 print(data)
 
-# Birth place of people which Medicine is their academic discipline
+## Birth place of people which Medicine is their academic discipline
 
 fig = plt.figure(figsize=(8, 8))
 m = Basemap(projection='cyl', resolution=None,
@@ -116,7 +116,7 @@ for index, row in data.iterrows():
     #plt.text(x, y, row['name'], fontsize=12);
     plt.text(x, y, '', fontsize=12);
 
-# Death place of people which Medicine is their academic discipline
+## Death place of people which Medicine is their academic discipline
 
 fig = plt.figure(figsize=(8, 8))
 m = Basemap(projection='cyl', resolution=None,
@@ -130,7 +130,7 @@ for index, row in data.iterrows():
     #plt.text(x, y, row['name'], fontsize=12);
     plt.text(x, y, '', fontsize=12);
 
-# Medicine property - activeSector
+## Medicine property - activeSector
 
 query = """
 select distinct ?activitySectorName ?fieldName 
@@ -175,7 +175,7 @@ tempDataFrame = tempDataFrame.append(data, ignore_index=True)
 tempDataFrame = tempDataFrame.drop_duplicates()
 tempDataFrame
 
-# Medicine Diseases based on activity sector - Tree Map
+## Medicine Diseases based on activity sector - Tree Map
 
 namesTemp = []
 parentsTemp = []
@@ -191,7 +191,7 @@ fig = px.treemap(
 )
 fig.show()
 
-# Medicine property - discipline
+## Medicine property - discipline
 
 query = """
 select distinct  ?name ?impactFactor ?openAccess
@@ -213,7 +213,7 @@ param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org',
 data = pd.read_csv(endpoint + '?' + param)
 print(data)
 
-# Impact factor of medical jurnals
+## Impact factor of medical jurnals
 
 import plotly.graph_objects as px
 import numpy as np
@@ -248,7 +248,7 @@ plot.update_layout(
 
 plot.show()
 
-# Which of the medical jurnals have open access along with their imapct factor
+## Which of the medical jurnals have open access along with their imapct factor
 
 openAccessUniqueValues =  data['openAccess'].str.lower().unique()
 
@@ -380,7 +380,7 @@ plot.show()
 
 
 
-# Medicine property - industryof
+## Medicine property - industryof
 
 query = """
 select distinct  ?name  ?abstract ?thumbnail 
@@ -402,7 +402,7 @@ param = urllib.parse.urlencode({'default-graph-uri': 'http://dbpedia.org',
 data = pd.read_csv(endpoint + '?' + param)
 print(data)
 
-# Entities from Medical Industry
+## Entities from Medical Industry
 
 !pip install ipyplot
 
