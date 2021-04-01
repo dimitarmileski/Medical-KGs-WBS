@@ -96,7 +96,7 @@ RUN cd $HOME/work;\
                 ipywidgets \
                 nibabel \
                 nbconvert; \
-    jupyter labextension install --minimize=False \
+    jupyter labextension install --minimize=False jupyterlab-sos; \
     git clone https://github.com/dimitarmileski/Medical-KGs-WBS.git; \
     cd Medical-KGs-WBS;\
     chmod -R 777 $HOME/work/Medical-KGs-WBS
