@@ -7,8 +7,6 @@
     title: "Medicine"
   - file: 02/Clustering_over_Medical_Linked_Data
     title: "Clustering over Medical KGs"
-  - file: 03/GraphVisualization
-    title: "Visualisation COVID-19-Net Knowledge Graph"
 
 - part: "External resources"
   chapters:
